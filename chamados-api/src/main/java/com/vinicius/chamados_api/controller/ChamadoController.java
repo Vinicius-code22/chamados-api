@@ -1,11 +1,9 @@
 package com.vinicius.chamados_api.controller;
 
+import com.vinicius.chamados_api.dto.ChamadoRequestDTO;
 import com.vinicius.chamados_api.dto.ChamadoResponseDTO;
 import com.vinicius.chamados_api.service.ChamadoService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
@@ -28,5 +26,10 @@ public class ChamadoController {
     @GetMapping("/{id}")
     public ChamadoResponseDTO buscarPorId(@PathVariable Long id) {
         return chamadoService.buscarPorId(id);
+    }
+
+    @PostMapping
+    public ChamadoResponseDTO criar(@RequestBody ChamadoRequestDTO chamadoRequestDTO) {
+        return chamadoService.criar(chamadoRequestDTO);
     }
 }

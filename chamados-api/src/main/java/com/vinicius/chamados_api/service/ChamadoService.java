@@ -4,47 +4,44 @@ import com.vinicius.chamados_api.dto.ChamadoRequestDTO;
 import com.vinicius.chamados_api.dto.ChamadoResponseDTO;
 import com.vinicius.chamados_api.entity.Chamado;
 import com.vinicius.chamados_api.entity.enums.StatusChamado;
+import com.vinicius.chamados_api.repository.ChamadoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Service
 public class ChamadoService {
 
-    private Long ultimoId = 3L;
+    private final ChamadoRepository chamadoRepository;
 
-    private final List<Chamado> listChamados = new ArrayList<>(List.of(new Chamado(1L, "Pc desligou", StatusChamado.EM_AVALIACAO),
-            new Chamado(2L, "Preventiva notebook", StatusChamado.AGUARDANDO_APROVACAO),
-            new Chamado(3L, "Preventiva pc", StatusChamado.FINALIZADO)));
-
-
+    public ChamadoService(ChamadoRepository chamadoRepository) {
+        this.chamadoRepository = chamadoRepository;
+    }
     private ChamadoResponseDTO converterParaDTO(Chamado chamado) {
         return new ChamadoResponseDTO(chamado.getId(), chamado.getTitulo(), chamado.getStatus());
     }
 
     public List<ChamadoResponseDTO> listar() {
-       return listChamados.stream()
+       return chamadoRepository.findAll().stream()
                 .map(this::converterParaDTO)
                 .toList();
     }
 
     public ChamadoResponseDTO buscarPorId(Long id) {
-        for (Chamado chamado : listChamados) {
-            if (chamado.getId().equals(id)) {
-                return converterParaDTO(chamado);
-            }
-        }
 
-        return null;
+        return chamadoRepository.findById(id).map(this::converterParaDTO).orElse(null);
     }
 
     public ChamadoResponseDTO criar (ChamadoRequestDTO chamadoRequestDTO) {
-        ultimoId++;
-        Chamado chamado = new Chamado(ultimoId, chamadoRequestDTO.titulo(), StatusChamado.RECEBIDO);
-        listChamados.add(chamado);
+        Chamado chamado = new Chamado(chamadoRequestDTO.titulo(), StatusChamado.RECEBIDO);
+        Chamado chamadoSalvo = chamadoRepository.save(chamado);
 
-        return converterParaDTO(chamado);
+        return converterParaDTO(chamadoSalvo);
+    }
+
+    public void deletarPorId(Long id) {
+        chamadoRepository.deleteById(id);
     }
 }
 

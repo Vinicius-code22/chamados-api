@@ -32,4 +32,9 @@ public class ChamadoController {
     public ChamadoResponseDTO criar(@RequestBody ChamadoRequestDTO chamadoRequestDTO) {
         return chamadoService.criar(chamadoRequestDTO);
     }
+
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id) {
+        chamadoService.deletarPorId(id);
+    }
 }

@@ -5,6 +5,7 @@ import com.vinicius.chamados_api.dto.ChamadoResponseDTO;
 import com.vinicius.chamados_api.entity.Chamado;
 import com.vinicius.chamados_api.entity.enums.StatusChamado;
 import com.vinicius.chamados_api.repository.ChamadoRepository;
+import com.vinicius.chamados_api.service.exceptions.ChamadoInexistenteException;
 import org.springframework.stereotype.Service;
 
 
@@ -30,7 +31,7 @@ public class ChamadoService {
 
     public ChamadoResponseDTO buscarPorId(Long id) {
 
-        return chamadoRepository.findById(id).map(this::converterParaDTO).orElse(null);
+        return chamadoRepository.findById(id).map(this::converterParaDTO).orElseThrow(() -> new ChamadoInexistenteException(id));
     }
 
     public ChamadoResponseDTO criar (ChamadoRequestDTO chamadoRequestDTO) {

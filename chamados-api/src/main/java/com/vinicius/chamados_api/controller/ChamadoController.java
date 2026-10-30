@@ -3,6 +3,7 @@ package com.vinicius.chamados_api.controller;
 import com.vinicius.chamados_api.dto.ChamadoRequestDTO;
 import com.vinicius.chamados_api.dto.ChamadoResponseDTO;
 import com.vinicius.chamados_api.service.ChamadoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class ChamadoController {
     }
 
     @PostMapping
-    public ResponseEntity<ChamadoResponseDTO> criar(@RequestBody ChamadoRequestDTO chamadoRequestDTO) {
+    public ResponseEntity<ChamadoResponseDTO> criar(@Valid @RequestBody ChamadoRequestDTO chamadoRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(chamadoService.criar(chamadoRequestDTO));
     }
 

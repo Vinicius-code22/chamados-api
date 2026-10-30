@@ -19,12 +19,13 @@ public class ChamadoService {
     public ChamadoService(ChamadoRepository chamadoRepository) {
         this.chamadoRepository = chamadoRepository;
     }
+
     private ChamadoResponseDTO converterParaDTO(Chamado chamado) {
         return new ChamadoResponseDTO(chamado.getId(), chamado.getTitulo(), chamado.getStatus());
     }
 
     public List<ChamadoResponseDTO> listar() {
-       return chamadoRepository.findAll().stream()
+        return chamadoRepository.findAll().stream()
                 .map(this::converterParaDTO)
                 .toList();
     }
@@ -34,7 +35,7 @@ public class ChamadoService {
         return chamadoRepository.findById(id).map(this::converterParaDTO).orElseThrow(() -> new ChamadoInexistenteException(id));
     }
 
-    public ChamadoResponseDTO criar (ChamadoRequestDTO chamadoRequestDTO) {
+    public ChamadoResponseDTO criar(ChamadoRequestDTO chamadoRequestDTO) {
         Chamado chamado = new Chamado(chamadoRequestDTO.titulo(), StatusChamado.RECEBIDO);
         Chamado chamadoSalvo = chamadoRepository.save(chamado);
 
@@ -42,6 +43,9 @@ public class ChamadoService {
     }
 
     public void deletarPorId(Long id) {
+        if (!chamadoRepository.existsById(id)) {
+            throw new ChamadoInexistenteException(id);
+        }
         chamadoRepository.deleteById(id);
     }
 }

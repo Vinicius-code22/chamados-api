@@ -3,6 +3,8 @@ package com.vinicius.chamados_api.controller;
 import com.vinicius.chamados_api.dto.ChamadoRequestDTO;
 import com.vinicius.chamados_api.dto.ChamadoResponseDTO;
 import com.vinicius.chamados_api.service.ChamadoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,12 +31,13 @@ public class ChamadoController {
     }
 
     @PostMapping
-    public ChamadoResponseDTO criar(@RequestBody ChamadoRequestDTO chamadoRequestDTO) {
-        return chamadoService.criar(chamadoRequestDTO);
+    public ResponseEntity<ChamadoResponseDTO> criar(@RequestBody ChamadoRequestDTO chamadoRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(chamadoService.criar(chamadoRequestDTO));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         chamadoService.deletarPorId(id);
+        return ResponseEntity.noContent().build();
     }
 }

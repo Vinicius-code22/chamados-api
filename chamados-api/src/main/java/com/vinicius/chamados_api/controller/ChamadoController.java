@@ -6,7 +6,9 @@ import com.vinicius.chamados_api.service.ChamadoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 
 
 import java.util.List;
@@ -32,8 +34,8 @@ public class ChamadoController {
     }
 
     @PostMapping
-    public ResponseEntity<ChamadoResponseDTO> criar(@Valid @RequestBody ChamadoRequestDTO chamadoRequestDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(chamadoService.criar(chamadoRequestDTO));
+    public ResponseEntity<ChamadoResponseDTO> criar(@Valid @RequestBody ChamadoRequestDTO chamadoRequestDTO, Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(chamadoService.criar(chamadoRequestDTO, authentication.getName()));
     }
 
     @DeleteMapping("/{id}")

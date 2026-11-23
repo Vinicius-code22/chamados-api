@@ -5,6 +5,7 @@ import com.vinicius.chamados_api.service.exceptions.ChamadoInexistenteException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,6 +29,14 @@ public class ResourceExceptionHandler {
         String mensagem = e.getBindingResult().getFieldErrors()
                 .stream().map(erro -> String.format("%s: %s", erro.getField(), erro.getDefaultMessage()))
                 .collect(Collectors.joining(", "));
+        ErroResponseDTO erroResponseDTO = new ErroResponseDTO(status.value(), mensagem, LocalDateTime.now(), request.getRequestURI());
+        return ResponseEntity.status(status).body(erroResponseDTO);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErroResponseDTO> corpoInvalido(HttpServletRequest request, HttpMessageNotReadableException e) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String mensagem = "Corpo da requisição inválido. Verifique se o JSON está bem formatado.";
         ErroResponseDTO erroResponseDTO = new ErroResponseDTO(status.value(), mensagem, LocalDateTime.now(), request.getRequestURI());
         return ResponseEntity.status(status).body(erroResponseDTO);
     }

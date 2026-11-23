@@ -22,11 +22,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/chamados").hasAnyRole("ADMIN", "CLIENTE")
-                .requestMatchers(HttpMethod.GET, "/chamados/{id}").hasAnyRole("ADMIN", "CLIENTE")
-                .anyRequest().hasRole("ADMIN")
-    )
-    .httpBasic(Customizer.withDefaults());
+                        .requestMatchers(HttpMethod.POST, "/chamados").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/chamados/{id}").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers("/error").permitAll()
+                        .anyRequest().hasRole("ADMIN")
+                )
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
